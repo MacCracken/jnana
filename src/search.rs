@@ -170,6 +170,7 @@ mod tests {
             }),
             source: "prakash".into(),
             tags: vec!["light".into(), "fundamental".into()],
+            related: vec![],
         });
         reg.register(Entry {
             id: "pi".into(),
@@ -186,6 +187,7 @@ mod tests {
             }),
             source: "hisab".into(),
             tags: vec!["circle".into(), "geometry".into(), "fundamental".into()],
+            related: vec![],
         });
         reg
     }

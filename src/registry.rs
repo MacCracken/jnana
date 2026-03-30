@@ -3,6 +3,7 @@
 use crate::domain::Domain;
 use crate::entry::Entry;
 use crate::error::{JnanaError, Result};
+use crate::provider::KnowledgeProvider;
 use std::collections::HashMap;
 
 /// The knowledge registry — holds all entries in memory.
@@ -30,6 +31,12 @@ impl Registry {
     #[must_use]
     pub fn get(&self, id: &str) -> Option<&Entry> {
         self.entries.get(id)
+    }
+
+    /// Get a mutable reference to an entry by ID.
+    #[must_use]
+    pub fn get_mut(&mut self, id: &str) -> Option<&mut Entry> {
+        self.entries.get_mut(id)
     }
 
     /// Get an entry by ID, returning an error if not found.
@@ -83,6 +90,33 @@ impl Registry {
         self.entries.values().map(|e| e.estimated_size()).sum()
     }
 
+    /// Register all entries from a knowledge provider.
+    pub fn register_provider(&mut self, provider: &dyn KnowledgeProvider) {
+        let entries = provider.entries();
+        tracing::info!(
+            source = provider.source_name(),
+            count = entries.len(),
+            "registering knowledge provider"
+        );
+        for entry in entries {
+            self.register(entry);
+        }
+    }
+
+    /// Create a registry pre-loaded with all enabled AGNOS providers.
+    ///
+    /// Loads every provider enabled by feature flags and resolves
+    /// cross-references between entries.
+    #[must_use]
+    pub fn with_agnos_providers() -> Self {
+        let mut reg = Self::new();
+        for provider in crate::providers::all_providers() {
+            reg.register_provider(&*provider);
+        }
+        crate::linker::resolve_links(&mut reg);
+        reg
+    }
+
     /// Count entries per domain.
     #[must_use]
     pub fn domain_counts(&self) -> HashMap<Domain, usize> {
@@ -121,6 +155,7 @@ mod tests {
             }),
             source: "test".into(),
             tags: vec![],
+            related: vec![],
         }
     }
 

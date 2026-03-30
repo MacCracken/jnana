@@ -108,21 +108,21 @@ impl Domain {
         }
     }
 
-    /// AGNOS crate that provides internal knowledge for this domain (if any).
+    /// AGNOS crates that provide internal knowledge for this domain.
     #[must_use]
-    pub const fn agnos_crate(&self) -> Option<&'static str> {
+    pub const fn agnos_crates(&self) -> &'static [&'static str] {
         match self {
-            Self::Mathematics => Some("hisab"),
-            Self::Physics => Some("impetus, prakash, bijli, ushma"),
-            Self::Chemistry => Some("kimiya"),
-            Self::Biology => Some("jivanu, jantu, vanaspati, sharira"),
-            Self::EarthScience => Some("khanij, badal"),
-            Self::Astronomy => Some("falak, tara, jyotish"),
-            Self::Statistics => Some("pramana"),
-            Self::Computing => Some("vidya"),
-            Self::Psychology => Some("bodh"),
-            Self::Sociology => Some("sangha"),
-            _ => None,
+            Self::Mathematics => &["hisab"],
+            Self::Physics => &["impetus", "prakash", "bijli", "ushma"],
+            Self::Chemistry => &["kimiya"],
+            Self::Biology => &["jivanu", "jantu", "vanaspati", "sharira"],
+            Self::EarthScience => &["khanij", "badal"],
+            Self::Astronomy => &["falak", "tara", "jyotish"],
+            Self::Statistics => &["pramana"],
+            Self::Computing => &["vidya"],
+            Self::Psychology => &["bodh"],
+            Self::Sociology => &["sangha"],
+            _ => &[],
         }
     }
 
@@ -177,9 +177,10 @@ mod tests {
 
     #[test]
     fn agnos_crates() {
-        assert_eq!(Domain::Mathematics.agnos_crate(), Some("hisab"));
-        assert_eq!(Domain::Chemistry.agnos_crate(), Some("kimiya"));
-        assert!(Domain::Medicine.agnos_crate().is_none());
+        assert_eq!(Domain::Mathematics.agnos_crates(), &["hisab"]);
+        assert_eq!(Domain::Chemistry.agnos_crates(), &["kimiya"]);
+        assert_eq!(Domain::Physics.agnos_crates(), &["impetus", "prakash", "bijli", "ushma"]);
+        assert!(Domain::Medicine.agnos_crates().is_empty());
     }
 
     #[test]

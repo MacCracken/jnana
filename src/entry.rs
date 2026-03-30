@@ -24,6 +24,9 @@ pub struct Entry {
     pub source: String,
     /// Tags for search.
     pub tags: Vec<String>,
+    /// IDs of related entries (cross-references).
+    #[serde(default)]
+    pub related: Vec<String>,
 }
 
 /// The type of knowledge in an entry.
@@ -112,6 +115,7 @@ impl Entry {
             kind,
             source: source.into(),
             tags,
+            related: Vec::new(),
         }
     }
 
@@ -128,6 +132,7 @@ impl Entry {
     pub fn estimated_size(&self) -> usize {
         self.summary.len()
             + self.source.len()
+            + self.related.iter().map(|r| r.len()).sum::<usize>()
             + match &self.kind {
                 EntryKind::Fact(f) => f.statement.len() + f.explanation.len(),
                 EntryKind::Constant(c) => c.value.len() + c.unit.len() + c.authority.len(),
@@ -165,6 +170,7 @@ mod tests {
                 "fundamental".into(),
                 "exact".into(),
             ],
+            related: vec![],
         }
     }
 
@@ -191,6 +197,7 @@ mod tests {
             }),
             source: "Red Cross First Aid Manual".into(),
             tags: vec!["first-aid".into(), "emergency".into(), "cardiac".into()],
+            related: vec![],
         }
     }
 
