@@ -190,4 +190,81 @@ mod tests {
         let decoded: Domain = serde_json::from_str(&json).unwrap();
         assert_eq!(d, decoded);
     }
+
+    #[test]
+    fn serde_roundtrip_all() {
+        for &domain in Domain::all() {
+            let json = serde_json::to_string(&domain).unwrap();
+            let decoded: Domain = serde_json::from_str(&json).unwrap();
+            assert_eq!(domain, decoded, "roundtrip failed for {domain}");
+        }
+    }
+
+    #[test]
+    fn display_name_matches_display() {
+        for &domain in Domain::all() {
+            assert_eq!(domain.to_string(), domain.display_name());
+        }
+    }
+
+    #[test]
+    fn description_not_empty() {
+        for &domain in Domain::all() {
+            assert!(!domain.description().is_empty(), "{domain} has empty description");
+        }
+    }
+
+    #[test]
+    fn science_domains_have_crates() {
+        let science = [
+            Domain::Mathematics,
+            Domain::Physics,
+            Domain::Chemistry,
+            Domain::Biology,
+            Domain::EarthScience,
+            Domain::Astronomy,
+            Domain::Statistics,
+            Domain::Computing,
+            Domain::Psychology,
+            Domain::Sociology,
+        ];
+        for domain in science {
+            assert!(
+                !domain.agnos_crates().is_empty(),
+                "{domain} should have AGNOS crates"
+            );
+        }
+    }
+
+    #[test]
+    fn applied_domains_have_no_crates() {
+        let applied = [
+            Domain::Medicine,
+            Domain::Survival,
+            Domain::Agriculture,
+            Domain::Construction,
+            Domain::Repair,
+            Domain::Communication,
+            Domain::Encyclopedia,
+            Domain::Language,
+            Domain::Literature,
+            Domain::Geography,
+        ];
+        for domain in applied {
+            assert!(
+                domain.agnos_crates().is_empty(),
+                "{domain} should not have AGNOS crates"
+            );
+        }
+    }
+
+    #[test]
+    fn domain_eq_and_hash() {
+        use std::collections::HashSet;
+        let mut set = HashSet::new();
+        for &d in Domain::all() {
+            assert!(set.insert(d), "duplicate domain: {d}");
+        }
+        assert_eq!(set.len(), 20);
+    }
 }

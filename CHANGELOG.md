@@ -21,6 +21,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `related` field on `Entry` for cross-references (`#[serde(default)]`)
 - `agnos-all` feature flag to enable all science crate providers
 
+- TOML content pipeline: `content::load_sources()`, `content::load_profiles()`
+- 8 curated source definitions (WikiMed, Wikivoyage, Wiktionary, WHO field medicine, FAO agriculture, OSM, iFixit, Wikipedia)
+- 5 profile definitions matching hardcoded presets (survival, homesteader, developer, educator, full)
+- `content::index_sources()` — index source metadata into Registry for unified search
+- `download::download_source()` with progress callback (behind `download` feature)
+- `download::verify_checksum()` and `download::compute_checksum()` — SHA-256 integrity verification
+- `Toml` error variant in `JnanaError`
+- HTML portal generation (`portal::generate`) — self-contained page with embedded CSS/JS
+- Client-side search with domain filtering in portal
+- Kiwix ZIM auto-linking in portal (localhost:port/source_id)
+- 138 tests across all modules with full pipeline integration tests
+- 11 criterion benchmarks (search, registry, linker, portal, content indexing)
+
 ### Changed
 - `Domain::agnos_crate()` replaced by `Domain::agnos_crates()` returning `&[&str]`
 

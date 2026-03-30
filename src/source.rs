@@ -159,4 +159,40 @@ mod tests {
         assert!(s.enabled);
         assert!(s.notes.is_empty());
     }
+
+    #[test]
+    fn source_kind_serde_roundtrip() {
+        for kind in [SourceKind::Zim, SourceKind::Pdf, SourceKind::Osm, SourceKind::File] {
+            let json = serde_json::to_string(&kind).unwrap();
+            let decoded: SourceKind = serde_json::from_str(&json).unwrap();
+            assert_eq!(kind, decoded);
+        }
+    }
+
+    #[test]
+    fn source_with_all_fields() {
+        let s = Source::new("full", "Full Source", Domain::Encyclopedia, SourceKind::Zim, "https://example.com", 5000)
+            .with_checksum("sha256:abc")
+            .with_enabled(true)
+            .with_notes("Complete source.");
+        let json = serde_json::to_string(&s).unwrap();
+        let decoded: Source = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.id, "full");
+        assert_eq!(decoded.checksum.as_deref(), Some("sha256:abc"));
+        assert_eq!(decoded.notes, "Complete source.");
+        assert!(decoded.enabled);
+        assert_eq!(decoded.domain, Domain::Encyclopedia);
+        assert_eq!(decoded.kind, SourceKind::Zim);
+        assert_eq!(decoded.url, "https://example.com");
+    }
+
+    #[test]
+    fn source_disabled() {
+        let s = Source::new("d", "D", Domain::Medicine, SourceKind::Pdf, "", 0)
+            .with_enabled(false);
+        assert!(!s.enabled);
+        let json = serde_json::to_string(&s).unwrap();
+        let decoded: Source = serde_json::from_str(&json).unwrap();
+        assert!(!decoded.enabled);
+    }
 }

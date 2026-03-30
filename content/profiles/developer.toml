@@ -1,0 +1,6 @@
+id = "developer"
+name = "Developer"
+description = "Programming references, algorithms, systems knowledge, math."
+budget_mb = 3000
+domains = ["Computing", "Mathematics", "Statistics", "Physics"]
+include_external = false

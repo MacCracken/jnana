@@ -240,4 +240,66 @@ mod tests {
         let reg = Registry::default();
         assert!(reg.is_empty());
     }
+
+    #[test]
+    fn registry_get_mut() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("a", Domain::Mathematics));
+        let entry = reg.get_mut("a").unwrap();
+        entry.related.push("b".into());
+        assert_eq!(reg.get("a").unwrap().related, vec!["b"]);
+    }
+
+    #[test]
+    fn registry_get_mut_missing() {
+        let mut reg = Registry::new();
+        assert!(reg.get_mut("missing").is_none());
+    }
+
+    #[test]
+    fn registry_register_provider() {
+        use crate::provider::KnowledgeProvider;
+
+        struct FakeProvider;
+        impl KnowledgeProvider for FakeProvider {
+            fn source_name(&self) -> &str { "fake" }
+            fn domain(&self) -> Domain { Domain::Mathematics }
+            fn entries(&self) -> Vec<Entry> {
+                vec![
+                    make_entry("from_provider_1", Domain::Mathematics),
+                    make_entry("from_provider_2", Domain::Mathematics),
+                ]
+            }
+        }
+
+        let mut reg = Registry::new();
+        reg.register_provider(&FakeProvider);
+        assert_eq!(reg.len(), 2);
+        assert!(reg.get("from_provider_1").is_some());
+        assert!(reg.get("from_provider_2").is_some());
+    }
+
+    #[test]
+    fn registry_list_sorted_by_id() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("z", Domain::Physics));
+        reg.register(make_entry("a", Domain::Physics));
+        reg.register(make_entry("m", Domain::Physics));
+        let entries = reg.list();
+        let ids: Vec<&str> = entries.iter().map(|e| e.id.as_str()).collect();
+        assert_eq!(ids, vec!["a", "m", "z"]);
+    }
+
+    #[test]
+    fn registry_by_domain_empty() {
+        let reg = Registry::new();
+        assert!(reg.by_domain(Domain::Physics).is_empty());
+    }
+
+    #[test]
+    fn registry_with_agnos_providers_runs() {
+        // Just verify it doesn't panic — actual content depends on features
+        let reg = Registry::with_agnos_providers();
+        let _ = reg.len();
+    }
 }

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["PortalConfig"]};
+window.SIDEBAR_ITEMS = {"fn":["generate"],"struct":["PortalConfig"]};

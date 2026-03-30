@@ -1,0 +1,9 @@
+id = "wikipedia_en"
+name = "English Wikipedia"
+domain = "Encyclopedia"
+kind = "Zim"
+url = "https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_2024-06.zim"
+size_mb = 50000
+checksum = "sha256:placeholder"
+enabled = false
+notes = "Full English Wikipedia. Very large — enable for educator/full profiles. CC BY-SA."

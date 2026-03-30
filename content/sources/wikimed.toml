@@ -1,0 +1,9 @@
+id = "wikimed"
+name = "WikiMed Medical Encyclopedia"
+domain = "Medicine"
+kind = "Zim"
+url = "https://download.kiwix.org/zim/wikipedia/wikipedia_en_medicine_2024-06.zim"
+size_mb = 1200
+checksum = "sha256:placeholder"
+enabled = true
+notes = "Offline medical encyclopedia curated from Wikipedia medical articles. CC BY-SA."

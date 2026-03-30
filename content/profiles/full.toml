@@ -1,0 +1,6 @@
+id = "full"
+name = "Complete Knowledge Base"
+description = "All domains, all sources. The full foundation of knowing."
+budget_mb = 10000
+domains = ["Mathematics", "Physics", "Chemistry", "Biology", "EarthScience", "Astronomy", "Statistics", "Computing", "Psychology", "Sociology", "Medicine", "Survival", "Agriculture", "Construction", "Repair", "Communication", "Encyclopedia", "Language", "Literature", "Geography"]
+include_external = true

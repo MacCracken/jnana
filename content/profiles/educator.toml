@@ -1,0 +1,6 @@
+id = "educator"
+name = "Educator"
+description = "Broad knowledge base for teaching and learning across all domains."
+budget_mb = 8000
+domains = ["Mathematics", "Physics", "Chemistry", "Biology", "EarthScience", "Astronomy", "Statistics", "Computing", "Psychology", "Sociology", "Medicine", "Survival", "Agriculture", "Construction", "Repair", "Communication", "Encyclopedia", "Language", "Literature", "Geography"]
+include_external = true

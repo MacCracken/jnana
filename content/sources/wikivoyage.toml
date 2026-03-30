@@ -1,0 +1,9 @@
+id = "wikivoyage"
+name = "Wikivoyage Travel Guide"
+domain = "Survival"
+kind = "Zim"
+url = "https://download.kiwix.org/zim/wikivoyage/wikivoyage_en_all_2024-06.zim"
+size_mb = 800
+checksum = "sha256:placeholder"
+enabled = true
+notes = "Worldwide travel and survival information. CC BY-SA."

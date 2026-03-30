@@ -20,7 +20,7 @@ std = ["serde/std", "thiserror/std"]
 full = ["std", "logging", "serve", "download"]
 logging = ["dep:tracing-subscriber"]
 serve = []
-download = []
+download = ["dep:sha2"]
 
 # AGNOS science crate providers (from crates.io)
 hisab = ["dep:hisab"]
@@ -36,6 +36,7 @@ toml = "0.8"
 thiserror = { version = "2", default-features = false }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"], optional = true }
+sha2 = { version = "0.10", optional = true }
 
 # AGNOS science crates (optional)
 hisab = { version = "1.3", optional = true }
@@ -46,6 +47,7 @@ khanij = { version = "1.1", optional = true }
 [dev-dependencies]
 criterion = { version = "0.8", features = ["html_reports"] }
 serde_json = "1"
+tempfile = "3"
 
 [[bench]]
 name = "benchmarks"

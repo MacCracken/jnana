@@ -1,10 +1,12 @@
 //! Integration tests — cross-module workflows.
 
 use jnana::entry::{Constant, EntryKind, Procedure};
+use jnana::portal;
 use jnana::search::search;
 use jnana::source::{Source, SourceKind};
 use jnana::storage::calculate;
 use jnana::{Domain, Entry, Profile, Registry, SearchQuery};
+use std::path::Path;
 
 fn build_registry() -> Registry {
     let mut reg = Registry::new();
@@ -118,4 +120,78 @@ fn registry_roundtrip_via_json() {
     }
     assert_eq!(reg2.len(), reg.len());
     assert!(reg2.get("speed_of_light").is_some());
+}
+
+#[test]
+fn content_pipeline_loads_real_files() {
+    let sources_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("content/sources");
+    let profiles_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("content/profiles");
+
+    let sources = jnana::content::load_sources(&sources_dir).unwrap();
+    let profiles = jnana::content::load_profiles(&profiles_dir).unwrap();
+
+    assert!(sources.len() >= 8, "expected at least 8 source definitions");
+    assert_eq!(profiles.len(), 5, "expected 5 profile definitions");
+
+    // Index sources into a registry and verify they're searchable
+    let mut reg = Registry::new();
+    jnana::content::index_sources(&mut reg, &sources);
+    assert_eq!(reg.len(), sources.len());
+
+    let results = search(&reg, &SearchQuery::text("medical"));
+    assert!(!results.is_empty(), "should find medical sources");
+}
+
+#[test]
+fn portal_generation_end_to_end() {
+    let reg = build_registry();
+    let sources = vec![
+        Source::new("wikimed", "WikiMed", Domain::Medicine, SourceKind::Zim, "", 1200),
+        Source::new("fao", "FAO Guide", Domain::Agriculture, SourceKind::Pdf, "", 150),
+    ];
+
+    let config = portal::PortalConfig::default();
+    let html = portal::generate(&config, &reg, &sources);
+
+    assert!(html.contains("<!DOCTYPE html>"));
+    assert!(html.contains("Speed of Light"));
+    assert!(html.contains("WikiMed"));
+    assert!(html.contains("FAO Guide"));
+    assert!(html.contains("Emergency Water Purification"));
+    assert!(html.contains("</html>"));
+    assert!(html.len() > 1000, "portal should be non-trivial");
+}
+
+#[test]
+fn full_pipeline_load_index_search_portal() {
+    let sources_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("content/sources");
+    let sources = jnana::content::load_sources(&sources_dir).unwrap();
+
+    let mut reg = build_registry();
+    jnana::content::index_sources(&mut reg, &sources);
+
+    // Search across both internal and external content
+    // Verify combined count via registry directly
+    let all_count = reg.len();
+    assert!(
+        all_count >= 10,
+        "combined registry should have 10+ entries, got {}",
+        all_count
+    );
+
+    // Generate portal with everything
+    let config = portal::PortalConfig::default();
+    let html = portal::generate(&config, &reg, &sources);
+    assert!(html.contains("Speed of Light"));
+    assert!(html.contains("source")); // indexed sources should appear
+}
+
+#[test]
+fn with_agnos_providers_integration() {
+    // Regardless of features, this should not panic
+    let reg = Registry::with_agnos_providers();
+    // If no features enabled, it's empty; if features enabled, it has entries
+    let _ = reg.len();
+    let _ = reg.total_size();
+    let _ = reg.domain_counts();
 }

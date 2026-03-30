@@ -1,0 +1,9 @@
+id = "field_medicine"
+name = "WHO Field Medicine Guide"
+domain = "Medicine"
+kind = "Pdf"
+url = "https://www.who.int/publications/i/item/emergency-triage-assessment-and-treatment"
+size_mb = 50
+checksum = "sha256:placeholder"
+enabled = true
+notes = "WHO emergency triage, assessment, and treatment guide. Public domain."

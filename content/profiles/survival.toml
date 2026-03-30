@@ -1,0 +1,6 @@
+id = "survival"
+name = "Survival Kit"
+description = "Essential survival, medical, and practical knowledge. Fits on a phone."
+budget_mb = 2000
+domains = ["Medicine", "Survival", "Agriculture", "Construction", "Repair", "Communication"]
+include_external = true

@@ -12,7 +12,7 @@ const MIN_SHARED_TAGS: usize = 2;
 /// Resolve cross-references between entries in the registry.
 ///
 /// Links are inferred from shared tags: entries sharing at least
-/// [`MIN_SHARED_TAGS`] tags are connected bidirectionally.
+/// 2 tags are connected bidirectionally.
 pub fn resolve_links(registry: &mut Registry) {
     // Build tag index: lowercased tag -> list of entry IDs
     let mut tag_index: HashMap<String, Vec<String>> = HashMap::new();
@@ -132,5 +132,68 @@ mod tests {
         let mut reg = Registry::new();
         resolve_links(&mut reg);
         assert!(reg.is_empty());
+    }
+
+    #[test]
+    fn links_are_bidirectional() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("x", Domain::Physics, &["quantum", "field", "theory"]));
+        reg.register(make_entry("y", Domain::Physics, &["quantum", "field", "particle"]));
+
+        resolve_links(&mut reg);
+
+        let x = reg.get("x").unwrap();
+        let y = reg.get("y").unwrap();
+        assert!(x.related.contains(&"y".to_string()));
+        assert!(y.related.contains(&"x".to_string()));
+    }
+
+    #[test]
+    fn links_are_sorted() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("c", Domain::Physics, &["alpha", "beta"]));
+        reg.register(make_entry("a", Domain::Physics, &["alpha", "beta"]));
+        reg.register(make_entry("b", Domain::Physics, &["alpha", "beta"]));
+
+        resolve_links(&mut reg);
+
+        let c = reg.get("c").unwrap();
+        assert_eq!(c.related, vec!["a", "b"]);
+    }
+
+    #[test]
+    fn no_self_links() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("solo", Domain::Physics, &["tag1", "tag2", "tag3"]));
+
+        resolve_links(&mut reg);
+
+        let solo = reg.get("solo").unwrap();
+        assert!(solo.related.is_empty());
+    }
+
+    #[test]
+    fn cross_domain_linking() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("phys", Domain::Physics, &["energy", "conservation", "thermo"]));
+        reg.register(make_entry("chem", Domain::Chemistry, &["energy", "conservation", "reaction"]));
+
+        resolve_links(&mut reg);
+
+        let phys = reg.get("phys").unwrap();
+        assert!(phys.related.contains(&"chem".to_string()));
+    }
+
+    #[test]
+    fn many_shared_tags_still_one_link() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("a", Domain::Physics, &["t1", "t2", "t3", "t4"]));
+        reg.register(make_entry("b", Domain::Physics, &["t1", "t2", "t3", "t4"]));
+
+        resolve_links(&mut reg);
+
+        let a = reg.get("a").unwrap();
+        assert_eq!(a.related.len(), 1);
+        assert_eq!(a.related[0], "b");
     }
 }

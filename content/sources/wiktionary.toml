@@ -1,0 +1,9 @@
+id = "wiktionary_en"
+name = "English Wiktionary"
+domain = "Language"
+kind = "Zim"
+url = "https://download.kiwix.org/zim/wiktionary/wiktionary_en_all_2024-06.zim"
+size_mb = 2500
+checksum = "sha256:placeholder"
+enabled = true
+notes = "English dictionary with definitions, etymology, pronunciation. CC BY-SA."

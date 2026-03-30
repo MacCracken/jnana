@@ -1,6 +1,8 @@
 use criterion::{Criterion, criterion_group, criterion_main};
 use jnana::entry::{Constant, EntryKind};
+use jnana::portal;
 use jnana::search::search;
+use jnana::source::{Source, SourceKind};
 use jnana::{Domain, Entry, Registry, SearchQuery};
 
 /// Build a registry with N synthetic entries across all domains.
@@ -93,6 +95,57 @@ fn bench_total_size(c: &mut Criterion) {
     });
 }
 
+fn bench_linker(c: &mut Criterion) {
+    c.bench_function("linker_resolve_500", |b| {
+        b.iter(|| {
+            let mut reg = populated_registry(500);
+            jnana::linker::resolve_links(&mut reg);
+        });
+    });
+}
+
+fn bench_portal_generate(c: &mut Criterion) {
+    let reg = populated_registry(200);
+    let sources: Vec<Source> = (0..10)
+        .map(|i| {
+            Source::new(
+                format!("source_{i}"),
+                format!("Source {i}"),
+                Domain::all()[i % Domain::all().len()],
+                SourceKind::Zim,
+                "",
+                (i as u64 + 1) * 500,
+            )
+        })
+        .collect();
+    let config = portal::PortalConfig::default();
+    c.bench_function("portal_generate_200", |b| {
+        b.iter(|| std::hint::black_box(portal::generate(&config, &reg, &sources)));
+    });
+}
+
+fn bench_content_index(c: &mut Criterion) {
+    let sources: Vec<Source> = (0..50)
+        .map(|i| {
+            Source::new(
+                format!("source_{i}"),
+                format!("Source {i}"),
+                Domain::all()[i % Domain::all().len()],
+                SourceKind::Zim,
+                "",
+                100,
+            )
+        })
+        .collect();
+    c.bench_function("content_index_50", |b| {
+        b.iter(|| {
+            let mut reg = Registry::new();
+            jnana::content::index_sources(&mut reg, &sources);
+            std::hint::black_box(reg.len());
+        });
+    });
+}
+
 criterion_group!(
     benches,
     bench_search_text,
@@ -103,5 +156,8 @@ criterion_group!(
     bench_registry_list,
     bench_registry_by_domain,
     bench_total_size,
+    bench_linker,
+    bench_portal_generate,
+    bench_content_index,
 );
 criterion_main!(benches);

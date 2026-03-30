@@ -1,2 +1,2 @@
-window.ALL_CRATES = ["jnana"];
-//{"start":21,"fragment_lengths":[7]}
+window.ALL_CRATES = ["block_buffer","cfg_if","cpufeatures","crypto_common","digest","equivalent","generic_array","glam","hashbrown","hisab","indexmap","itoa","jnana","khanij","kimiya","libm","memchr","once_cell","pin_project_lite","proc_macro2","quote","serde","serde_core","serde_derive","serde_json","serde_spanned","sha2","syn","tanmatra","thiserror","thiserror_impl","toml","toml_datetime","toml_edit","toml_write","tracing","tracing_attributes","tracing_core","typenum","unicode_ident","winnow","zmij"];
+//{"start":21,"fragment_lengths":[14,9,14,16,9,13,16,7,12,8,11,7,8,9,9,7,9,12,19,14,8,8,13,15,13,16,7,6,11,12,17,7,16,12,13,10,21,15,10,16,9,7]}

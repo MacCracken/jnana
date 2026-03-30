@@ -1,0 +1,9 @@
+id = "ifixit"
+name = "iFixit Repair Guides"
+domain = "Repair"
+kind = "Zim"
+url = "https://download.kiwix.org/zim/ifixit/ifixit_en_all_2024-06.zim"
+size_mb = 3000
+checksum = "sha256:placeholder"
+enabled = true
+notes = "Device repair guides and teardowns. CC BY-NC-SA."

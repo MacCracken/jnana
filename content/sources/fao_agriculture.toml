@@ -1,0 +1,9 @@
+id = "fao_agriculture"
+name = "FAO Agricultural Handbook"
+domain = "Agriculture"
+kind = "Pdf"
+url = "https://www.fao.org/3/i3940e/i3940e.pdf"
+size_mb = 150
+checksum = "sha256:placeholder"
+enabled = true
+notes = "FAO guide to small-scale food processing. CC BY-NC-SA."

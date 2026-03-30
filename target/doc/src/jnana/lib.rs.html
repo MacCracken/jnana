@@ -54,26 +54,34 @@
 <a href=#54 id=54 data-nosnippet>54</a>//! let results = jnana::search::search(&amp;registry, &amp;SearchQuery::text("binding energy"));
 <a href=#55 id=55 data-nosnippet>55</a>//! ```
 <a href=#56 id=56 data-nosnippet>56</a>
-<a href=#57 id=57 data-nosnippet>57</a></span><span class="kw">pub mod </span>domain;
-<a href=#58 id=58 data-nosnippet>58</a><span class="kw">pub mod </span>entry;
-<a href=#59 id=59 data-nosnippet>59</a><span class="kw">pub mod </span>error;
-<a href=#60 id=60 data-nosnippet>60</a><span class="kw">pub mod </span>portal;
-<a href=#61 id=61 data-nosnippet>61</a><span class="kw">pub mod </span>profile;
-<a href=#62 id=62 data-nosnippet>62</a><span class="kw">pub mod </span>registry;
-<a href=#63 id=63 data-nosnippet>63</a><span class="kw">pub mod </span>search;
-<a href=#64 id=64 data-nosnippet>64</a><span class="kw">pub mod </span>source;
-<a href=#65 id=65 data-nosnippet>65</a><span class="kw">pub mod </span>storage;
-<a href=#66 id=66 data-nosnippet>66</a>
-<a href=#67 id=67 data-nosnippet>67</a><span class="attr">#[cfg(feature = <span class="string">"logging"</span>)]
-<a href=#68 id=68 data-nosnippet>68</a></span><span class="kw">pub mod </span>logging;
-<a href=#69 id=69 data-nosnippet>69</a>
-<a href=#70 id=70 data-nosnippet>70</a><span class="comment">// ── Core types ─────────────────────────────────────────────────────────────
-<a href=#71 id=71 data-nosnippet>71</a></span><span class="kw">pub use </span>domain::Domain;
-<a href=#72 id=72 data-nosnippet>72</a><span class="kw">pub use </span>entry::{Constant, Entry, EntryKind, Fact, Procedure, Table};
-<a href=#73 id=73 data-nosnippet>73</a><span class="kw">pub use </span>error::{JnanaError, <span class="prelude-ty">Result</span>};
-<a href=#74 id=74 data-nosnippet>74</a><span class="kw">pub use </span>profile::Profile;
-<a href=#75 id=75 data-nosnippet>75</a><span class="kw">pub use </span>registry::Registry;
-<a href=#76 id=76 data-nosnippet>76</a><span class="kw">pub use </span>search::{SearchQuery, SearchResult};
-<a href=#77 id=77 data-nosnippet>77</a><span class="kw">pub use </span>source::Source;
-<a href=#78 id=78 data-nosnippet>78</a><span class="kw">pub use </span>storage::StorageBudget;
+<a href=#57 id=57 data-nosnippet>57</a></span><span class="kw">pub mod </span>content;
+<a href=#58 id=58 data-nosnippet>58</a><span class="kw">pub mod </span>domain;
+<a href=#59 id=59 data-nosnippet>59</a><span class="kw">pub mod </span>entry;
+<a href=#60 id=60 data-nosnippet>60</a><span class="kw">pub mod </span>error;
+<a href=#61 id=61 data-nosnippet>61</a><span class="kw">pub mod </span>linker;
+<a href=#62 id=62 data-nosnippet>62</a><span class="kw">pub mod </span>portal;
+<a href=#63 id=63 data-nosnippet>63</a><span class="kw">pub mod </span>profile;
+<a href=#64 id=64 data-nosnippet>64</a><span class="kw">pub mod </span>provider;
+<a href=#65 id=65 data-nosnippet>65</a><span class="kw">pub mod </span>providers;
+<a href=#66 id=66 data-nosnippet>66</a><span class="kw">pub mod </span>registry;
+<a href=#67 id=67 data-nosnippet>67</a><span class="kw">pub mod </span>search;
+<a href=#68 id=68 data-nosnippet>68</a><span class="kw">pub mod </span>source;
+<a href=#69 id=69 data-nosnippet>69</a><span class="kw">pub mod </span>storage;
+<a href=#70 id=70 data-nosnippet>70</a>
+<a href=#71 id=71 data-nosnippet>71</a><span class="attr">#[cfg(feature = <span class="string">"download"</span>)]
+<a href=#72 id=72 data-nosnippet>72</a></span><span class="kw">pub mod </span>download;
+<a href=#73 id=73 data-nosnippet>73</a>
+<a href=#74 id=74 data-nosnippet>74</a><span class="attr">#[cfg(feature = <span class="string">"logging"</span>)]
+<a href=#75 id=75 data-nosnippet>75</a></span><span class="kw">pub mod </span>logging;
+<a href=#76 id=76 data-nosnippet>76</a>
+<a href=#77 id=77 data-nosnippet>77</a><span class="comment">// ── Core types ─────────────────────────────────────────────────────────────
+<a href=#78 id=78 data-nosnippet>78</a></span><span class="kw">pub use </span>domain::Domain;
+<a href=#79 id=79 data-nosnippet>79</a><span class="kw">pub use </span>entry::{Constant, Entry, EntryKind, Fact, Procedure, Table};
+<a href=#80 id=80 data-nosnippet>80</a><span class="kw">pub use </span>error::{JnanaError, <span class="prelude-ty">Result</span>};
+<a href=#81 id=81 data-nosnippet>81</a><span class="kw">pub use </span>profile::Profile;
+<a href=#82 id=82 data-nosnippet>82</a><span class="kw">pub use </span>provider::KnowledgeProvider;
+<a href=#83 id=83 data-nosnippet>83</a><span class="kw">pub use </span>registry::Registry;
+<a href=#84 id=84 data-nosnippet>84</a><span class="kw">pub use </span>search::{SearchQuery, SearchResult};
+<a href=#85 id=85 data-nosnippet>85</a><span class="kw">pub use </span>source::Source;
+<a href=#86 id=86 data-nosnippet>86</a><span class="kw">pub use </span>storage::StorageBudget;
 </code></pre></div></section></main></body></html>

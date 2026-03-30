@@ -54,6 +54,7 @@
 //! let results = jnana::search::search(&registry, &SearchQuery::text("binding energy"));
 //! ```
 
+pub mod content;
 pub mod domain;
 pub mod entry;
 pub mod error;
@@ -66,6 +67,9 @@ pub mod registry;
 pub mod search;
 pub mod source;
 pub mod storage;
+
+#[cfg(feature = "download")]
+pub mod download;
 
 #[cfg(feature = "logging")]
 pub mod logging;

@@ -305,5 +305,70 @@ mod tests {
         assert_eq!(e.id, "test");
         assert_eq!(e.domain, Domain::Mathematics);
         assert!(e.has_tag("math"));
+        assert!(e.related.is_empty(), "new entries should have empty related");
+    }
+
+    #[test]
+    fn estimated_size_procedure() {
+        let e = sample_procedure();
+        let size = e.estimated_size();
+        assert!(size > 0);
+        // Procedure size includes steps + warnings
+        if let EntryKind::Procedure(p) = &e.kind {
+            let step_size: usize = p.steps.iter().map(|s| s.len()).sum();
+            assert!(size >= step_size);
+        }
+    }
+
+    #[test]
+    fn estimated_size_fact() {
+        let e = Entry::new(
+            "fact",
+            "Fact",
+            Domain::Mathematics,
+            "A fact.",
+            EntryKind::Fact(Fact {
+                statement: "Water boils at 100C at 1 atm.".into(),
+                explanation: "Standard boiling point.".into(),
+                verification: None,
+            }),
+            "test",
+            vec![],
+        );
+        assert!(e.estimated_size() > 0);
+    }
+
+    #[test]
+    fn estimated_size_includes_related() {
+        let mut e = sample_constant();
+        let size_without = e.estimated_size();
+        e.related = vec!["some_related_entry".into(), "another_entry".into()];
+        let size_with = e.estimated_size();
+        assert!(size_with > size_without);
+    }
+
+    #[test]
+    fn serde_roundtrip_with_related() {
+        let mut e = sample_constant();
+        e.related = vec!["pi".into(), "planck".into()];
+        let json = serde_json::to_string(&e).unwrap();
+        let decoded: Entry = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.related, vec!["pi", "planck"]);
+    }
+
+    #[test]
+    fn serde_roundtrip_without_related() {
+        // Verify #[serde(default)] works — JSON without "related" field
+        let json = r#"{
+            "id": "test",
+            "title": "Test",
+            "domain": "Physics",
+            "summary": "Test entry.",
+            "kind": {"Fact": {"statement": "x", "explanation": "y", "verification": null}},
+            "source": "test",
+            "tags": []
+        }"#;
+        let decoded: Entry = serde_json::from_str(json).unwrap();
+        assert!(decoded.related.is_empty());
     }
 }

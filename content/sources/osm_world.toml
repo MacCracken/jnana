@@ -1,0 +1,9 @@
+id = "osm_world"
+name = "OpenStreetMap World"
+domain = "Geography"
+kind = "Osm"
+url = "https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf"
+size_mb = 70000
+checksum = "sha256:placeholder"
+enabled = false
+notes = "Full planet extract. Very large — enable only with 100GB+ available. ODbL."

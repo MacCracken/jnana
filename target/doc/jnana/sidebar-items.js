@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["domain","entry","error","logging","portal","profile","registry","search","source","storage"]};
+window.SIDEBAR_ITEMS = {"mod":["content","domain","download","entry","error","linker","portal","profile","provider","providers","registry","search","source","storage"]};

@@ -1,0 +1,6 @@
+id = "homesteader"
+name = "Homesteader"
+description = "Self-sufficiency: farming, building, repair, medicine, plus science fundamentals."
+budget_mb = 5000
+domains = ["Medicine", "Survival", "Agriculture", "Construction", "Repair", "Communication", "Chemistry", "Biology", "EarthScience", "Mathematics"]
+include_external = true

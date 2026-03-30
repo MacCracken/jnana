@@ -34,6 +34,10 @@ pub enum JnanaError {
     #[error("parse error: {0}")]
     Parse(String),
 
+    /// TOML deserialization error.
+    #[error("TOML error: {0}")]
+    Toml(#[from] toml::de::Error),
+
     /// I/O error.
     #[error("I/O error: {0}")]
     Io(#[from] std::io::Error),
