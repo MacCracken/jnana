@@ -15,6 +15,15 @@
 - [x] Serde roundtrip for all types
 - [x] P(-1) scaffold hardening
 
+### v0.3.0 — AGNOS Integration
+
+- [x] `KnowledgeProvider` trait for AGNOS crates to export knowledge entries
+- [x] Feature-gated providers for kimiya, tanmatra, hisab, khanij (from crates.io)
+- [x] Auto-registration via `Registry::with_agnos_providers()`
+- [x] Cross-crate link resolution via shared tags (`linker::resolve_links`)
+- [x] `Domain::agnos_crates()` refactor for programmatic crate lookup
+- [x] `related` field on `Entry` for cross-references
+
 ## Planned
 
 ### v0.2.0 — Content Pipeline
@@ -25,12 +34,6 @@
 - [ ] SHA-256 checksum verification on download
 - [ ] Content indexing from TOML files into Registry
 
-### v0.3.0 — AGNOS Integration
-
-- [ ] Trait for AGNOS crates to export their knowledge entries
-- [ ] Auto-registration of internal knowledge from crate data
-- [ ] Cross-crate dependency graph for knowledge linking
-
 ### v0.4.0 — Portal
 
 - [ ] HTML portal generation from Registry + Source list
@@ -39,9 +42,10 @@
 
 ### v0.5.0 — AI Integration
 
-- [ ] MCP tools: `jnana_search`, `jnana_lookup`, `jnana_budget`
+- [ ] MCP tools via bote: `jnana_search`, `jnana_lookup`, `jnana_budget`
 - [ ] Daimon integration for grounded knowledge queries
 - [ ] Structured responses for AI consumption
+- [ ] **Upstream**: bote and daimon will likely need updates to support jnana's tool/plugin interfaces
 
 ### v1.0.0 — Stable
 
