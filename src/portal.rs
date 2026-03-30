@@ -6,6 +6,7 @@
 
 /// Placeholder for portal generation.
 /// Will generate HTML from Registry + Source list.
+#[non_exhaustive]
 pub struct PortalConfig {
     /// Title shown in the portal header.
     pub title: String,

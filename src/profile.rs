@@ -130,6 +130,18 @@ impl Profile {
     }
 }
 
+impl std::fmt::Display for Profile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} — {}GB, {} domains",
+            self.name,
+            self.budget_mb / 1_000,
+            self.domains.len()
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -159,6 +171,14 @@ mod tests {
     fn all_profiles() {
         let profiles = Profile::all_profiles();
         assert_eq!(profiles.len(), 5);
+    }
+
+    #[test]
+    fn profile_display() {
+        let p = Profile::survival();
+        let s = p.to_string();
+        assert!(s.contains("Survival Kit"));
+        assert!(s.contains("2GB"));
     }
 
     #[test]

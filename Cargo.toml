@@ -11,7 +11,7 @@ readme = "README.md"
 documentation = "https://docs.rs/jnana"
 keywords = ["knowledge", "offline", "reference", "education", "science"]
 categories = ["science", "text-processing"]
-exclude = [".claude/", ".github/", "docs/", "scripts/"]
+exclude = [".claude/", ".github/", "docs/", "scripts/", "benchmark-results/", "coverage/"]
 publish = false
 
 [features]

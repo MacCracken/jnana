@@ -30,6 +30,27 @@ impl SearchQuery {
             limit: None,
         }
     }
+
+    /// Filter results to a specific domain.
+    #[must_use]
+    pub fn with_domain(mut self, domain: Domain) -> Self {
+        self.domain = Some(domain);
+        self
+    }
+
+    /// Require all given tags to match.
+    #[must_use]
+    pub fn with_tags(mut self, tags: Vec<String>) -> Self {
+        self.tags = tags;
+        self
+    }
+
+    /// Limit the number of results returned.
+    #[must_use]
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
 }
 
 /// A search result with relevance score.
@@ -245,6 +266,22 @@ mod tests {
         let results = search(&reg, &q);
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].id, "pi");
+    }
+
+    #[test]
+    fn search_query_builder() {
+        let q = SearchQuery::text("light")
+            .with_domain(Domain::Physics)
+            .with_limit(5);
+        assert_eq!(q.text.as_deref(), Some("light"));
+        assert_eq!(q.domain, Some(Domain::Physics));
+        assert_eq!(q.limit, Some(5));
+    }
+
+    #[test]
+    fn search_query_with_tags() {
+        let q = SearchQuery::text("test").with_tags(vec!["fundamental".into()]);
+        assert_eq!(q.tags.len(), 1);
     }
 
     #[test]

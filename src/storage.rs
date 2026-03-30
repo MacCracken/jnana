@@ -64,11 +64,34 @@ pub fn calculate(available_mb: u64, profile: &Profile, sources: &[Source]) -> St
     }
 }
 
+impl std::fmt::Display for StorageBudget {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}: {}MB / {}MB used ({} sources fit, {} excluded)",
+            self.profile_id,
+            self.total_mb,
+            self.available_mb,
+            self.fits.len(),
+            self.excluded.len()
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::domain::Domain;
     use crate::source::SourceKind;
+
+    #[test]
+    fn budget_display() {
+        let profile = Profile::survival();
+        let budget = calculate(5000, &profile, &[]);
+        let s = budget.to_string();
+        assert!(s.contains("survival"));
+        assert!(s.contains("5000"));
+    }
 
     fn make_source(id: &str, name: &str, domain: Domain, size_mb: u64) -> Source {
         Source::new(id, name, domain, SourceKind::Zim, "", size_mb)
