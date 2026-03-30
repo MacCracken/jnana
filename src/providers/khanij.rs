@@ -159,8 +159,7 @@ impl KnowledgeProvider for KhanijProvider {
                     vec![
                         "Triclinic".into(),
                         "a \u{2260} b \u{2260} c".into(),
-                        "\u{03b1} \u{2260} \u{03b2} \u{2260} \u{03b3} \u{2260} 90\u{00b0}"
-                            .into(),
+                        "\u{03b1} \u{2260} \u{03b2} \u{2260} \u{03b3} \u{2260} 90\u{00b0}".into(),
                         "Plagioclase".into(),
                     ],
                     vec![
@@ -205,10 +204,7 @@ mod tests {
     #[test]
     fn minerals_table_has_rows() {
         let entries = KhanijProvider.entries();
-        let table = entries
-            .iter()
-            .find(|e| e.id == "common_minerals")
-            .unwrap();
+        let table = entries.iter().find(|e| e.id == "common_minerals").unwrap();
         if let EntryKind::Table(t) = &table.kind {
             assert_eq!(t.rows.len(), 15);
             assert_eq!(t.columns.len(), 6);

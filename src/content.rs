@@ -70,12 +70,7 @@ pub fn index_sources(registry: &mut Registry, sources: &[Source]) {
             format!("source_{}", source.id),
             &source.name,
             source.domain,
-            format!(
-                "{} — {} ({} MB)",
-                source.name,
-                source.kind,
-                source.size_mb
-            ),
+            format!("{} — {} ({} MB)", source.name, source.kind, source.size_mb),
             EntryKind::Fact(Fact {
                 statement: format!(
                     "{} is a {} source covering {} ({} MB).",
@@ -85,10 +80,7 @@ pub fn index_sources(registry: &mut Registry, sources: &[Source]) {
                     source.size_mb,
                 ),
                 explanation: source.notes.clone(),
-                verification: source
-                    .checksum
-                    .as_ref()
-                    .map(|c| format!("checksum: {c}")),
+                verification: source.checksum.as_ref().map(|c| format!("checksum: {c}")),
             }),
             format!("external:{}", source.id),
             vec![

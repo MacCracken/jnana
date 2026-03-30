@@ -305,7 +305,10 @@ mod tests {
         assert_eq!(e.id, "test");
         assert_eq!(e.domain, Domain::Mathematics);
         assert!(e.has_tag("math"));
-        assert!(e.related.is_empty(), "new entries should have empty related");
+        assert!(
+            e.related.is_empty(),
+            "new entries should have empty related"
+        );
     }
 
     #[test]

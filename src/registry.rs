@@ -262,8 +262,12 @@ mod tests {
 
         struct FakeProvider;
         impl KnowledgeProvider for FakeProvider {
-            fn source_name(&self) -> &str { "fake" }
-            fn domain(&self) -> Domain { Domain::Mathematics }
+            fn source_name(&self) -> &str {
+                "fake"
+            }
+            fn domain(&self) -> Domain {
+                Domain::Mathematics
+            }
             fn entries(&self) -> Vec<Entry> {
                 vec![
                     make_entry("from_provider_1", Domain::Mathematics),

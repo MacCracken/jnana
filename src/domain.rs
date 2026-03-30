@@ -179,7 +179,10 @@ mod tests {
     fn agnos_crates() {
         assert_eq!(Domain::Mathematics.agnos_crates(), &["hisab"]);
         assert_eq!(Domain::Chemistry.agnos_crates(), &["kimiya"]);
-        assert_eq!(Domain::Physics.agnos_crates(), &["impetus", "prakash", "bijli", "ushma"]);
+        assert_eq!(
+            Domain::Physics.agnos_crates(),
+            &["impetus", "prakash", "bijli", "ushma"]
+        );
         assert!(Domain::Medicine.agnos_crates().is_empty());
     }
 
@@ -210,7 +213,10 @@ mod tests {
     #[test]
     fn description_not_empty() {
         for &domain in Domain::all() {
-            assert!(!domain.description().is_empty(), "{domain} has empty description");
+            assert!(
+                !domain.description().is_empty(),
+                "{domain} has empty description"
+            );
         }
     }
 

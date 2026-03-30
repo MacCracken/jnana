@@ -97,8 +97,16 @@ mod tests {
     #[test]
     fn links_entries_with_shared_tags() {
         let mut reg = Registry::new();
-        reg.register(make_entry("a", Domain::Physics, &["light", "fundamental", "wave"]));
-        reg.register(make_entry("b", Domain::Physics, &["light", "fundamental", "particle"]));
+        reg.register(make_entry(
+            "a",
+            Domain::Physics,
+            &["light", "fundamental", "wave"],
+        ));
+        reg.register(make_entry(
+            "b",
+            Domain::Physics,
+            &["light", "fundamental", "particle"],
+        ));
         reg.register(make_entry("c", Domain::Chemistry, &["acid", "reaction"]));
 
         resolve_links(&mut reg);
@@ -137,8 +145,16 @@ mod tests {
     #[test]
     fn links_are_bidirectional() {
         let mut reg = Registry::new();
-        reg.register(make_entry("x", Domain::Physics, &["quantum", "field", "theory"]));
-        reg.register(make_entry("y", Domain::Physics, &["quantum", "field", "particle"]));
+        reg.register(make_entry(
+            "x",
+            Domain::Physics,
+            &["quantum", "field", "theory"],
+        ));
+        reg.register(make_entry(
+            "y",
+            Domain::Physics,
+            &["quantum", "field", "particle"],
+        ));
 
         resolve_links(&mut reg);
 
@@ -164,7 +180,11 @@ mod tests {
     #[test]
     fn no_self_links() {
         let mut reg = Registry::new();
-        reg.register(make_entry("solo", Domain::Physics, &["tag1", "tag2", "tag3"]));
+        reg.register(make_entry(
+            "solo",
+            Domain::Physics,
+            &["tag1", "tag2", "tag3"],
+        ));
 
         resolve_links(&mut reg);
 
@@ -175,8 +195,16 @@ mod tests {
     #[test]
     fn cross_domain_linking() {
         let mut reg = Registry::new();
-        reg.register(make_entry("phys", Domain::Physics, &["energy", "conservation", "thermo"]));
-        reg.register(make_entry("chem", Domain::Chemistry, &["energy", "conservation", "reaction"]));
+        reg.register(make_entry(
+            "phys",
+            Domain::Physics,
+            &["energy", "conservation", "thermo"],
+        ));
+        reg.register(make_entry(
+            "chem",
+            Domain::Chemistry,
+            &["energy", "conservation", "reaction"],
+        ));
 
         resolve_links(&mut reg);
 

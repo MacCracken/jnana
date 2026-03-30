@@ -146,8 +146,22 @@ fn content_pipeline_loads_real_files() {
 fn portal_generation_end_to_end() {
     let reg = build_registry();
     let sources = vec![
-        Source::new("wikimed", "WikiMed", Domain::Medicine, SourceKind::Zim, "", 1200),
-        Source::new("fao", "FAO Guide", Domain::Agriculture, SourceKind::Pdf, "", 150),
+        Source::new(
+            "wikimed",
+            "WikiMed",
+            Domain::Medicine,
+            SourceKind::Zim,
+            "",
+            1200,
+        ),
+        Source::new(
+            "fao",
+            "FAO Guide",
+            Domain::Agriculture,
+            SourceKind::Pdf,
+            "",
+            150,
+        ),
     ];
 
     let config = portal::PortalConfig::default();

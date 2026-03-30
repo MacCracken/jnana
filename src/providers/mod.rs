@@ -21,6 +21,7 @@ pub mod khanij;
 
 /// Returns all providers enabled by the current feature flags.
 #[must_use]
+#[allow(clippy::vec_init_then_push)]
 pub fn all_providers() -> Vec<Box<dyn KnowledgeProvider>> {
     #[allow(unused_mut)]
     let mut providers: Vec<Box<dyn KnowledgeProvider>> = Vec::new();

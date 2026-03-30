@@ -104,16 +104,16 @@ where
     );
 
     // Verify checksum if available
-    if let Some(checksum) = &source.checksum {
-        if checksum != "sha256:placeholder" {
-            if !verify_checksum(&dest_path, checksum)? {
-                return Err(JnanaError::IntegrityFailed {
-                    name: source.id.clone(),
-                    reason: "SHA-256 checksum mismatch".into(),
-                });
-            }
-            tracing::info!(source = %source.id, "checksum verified");
+    if let Some(checksum) = &source.checksum
+        && checksum != "sha256:placeholder"
+    {
+        if !verify_checksum(&dest_path, checksum)? {
+            return Err(JnanaError::IntegrityFailed {
+                name: source.id.clone(),
+                reason: "SHA-256 checksum mismatch".into(),
+            });
         }
+        tracing::info!(source = %source.id, "checksum verified");
     }
 
     Ok(dest_path)
