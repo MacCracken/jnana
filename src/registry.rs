@@ -6,6 +6,7 @@ use crate::error::{JnanaError, Result};
 use std::collections::HashMap;
 
 /// The knowledge registry — holds all entries in memory.
+#[non_exhaustive]
 pub struct Registry {
     entries: HashMap<String, Entry>,
 }
@@ -165,5 +166,43 @@ mod tests {
         let mut reg = Registry::new();
         reg.register(make_entry("a", Domain::Mathematics));
         assert!(reg.total_size() > 0);
+    }
+
+    #[test]
+    fn registry_overwrite() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("a", Domain::Mathematics));
+        reg.register(make_entry("a", Domain::Physics));
+        assert_eq!(reg.len(), 1);
+        assert_eq!(reg.get("a").unwrap().domain, Domain::Physics);
+    }
+
+    #[test]
+    fn registry_get_or_err_found() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("pi", Domain::Mathematics));
+        assert!(reg.get_or_err("pi").is_ok());
+    }
+
+    #[test]
+    fn registry_get_or_err_missing() {
+        let reg = Registry::new();
+        assert!(reg.get_or_err("missing").is_err());
+    }
+
+    #[test]
+    fn registry_list_ids_sorted() {
+        let mut reg = Registry::new();
+        reg.register(make_entry("c", Domain::Physics));
+        reg.register(make_entry("a", Domain::Mathematics));
+        reg.register(make_entry("b", Domain::Chemistry));
+        let ids = reg.list_ids();
+        assert_eq!(ids, vec!["a", "b", "c"]);
+    }
+
+    #[test]
+    fn registry_default() {
+        let reg = Registry::default();
+        assert!(reg.is_empty());
     }
 }

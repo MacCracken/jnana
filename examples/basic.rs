@@ -1,17 +1,17 @@
-use jnana::entry::{Constant, Entry, EntryKind, Procedure};
+use jnana::entry::{Constant, EntryKind, Procedure};
 use jnana::search::search;
-use jnana::{Domain, Profile, Registry, SearchQuery};
+use jnana::{Domain, Entry, Profile, Registry, SearchQuery};
 
 fn main() {
     let mut registry = Registry::new();
 
     // Register a physical constant
-    registry.register(Entry {
-        id: "speed_of_light".into(),
-        title: "Speed of Light in Vacuum".into(),
-        domain: Domain::Physics,
-        summary: "The speed of light in vacuum — a fundamental physical constant.".into(),
-        kind: EntryKind::Constant(Constant {
+    registry.register(Entry::new(
+        "speed_of_light",
+        "Speed of Light in Vacuum",
+        Domain::Physics,
+        "The speed of light in vacuum — a fundamental physical constant.",
+        EntryKind::Constant(Constant {
             symbol: "c".into(),
             value: "299792458".into(),
             unit: "m/s".into(),
@@ -19,17 +19,17 @@ fn main() {
             uncertainty: None,
             authority: "CODATA 2022 (exact)".into(),
         }),
-        source: "prakash, tanmatra".into(),
-        tags: vec!["light".into(), "speed".into(), "fundamental".into()],
-    });
+        "prakash, tanmatra",
+        vec!["light".into(), "speed".into(), "fundamental".into()],
+    ));
 
     // Register a survival procedure
-    registry.register(Entry {
-        id: "water_purification".into(),
-        title: "Emergency Water Purification".into(),
-        domain: Domain::Survival,
-        summary: "Methods to make water safe for drinking in the field.".into(),
-        kind: EntryKind::Procedure(Procedure {
+    registry.register(Entry::new(
+        "water_purification",
+        "Emergency Water Purification",
+        Domain::Survival,
+        "Methods to make water safe for drinking in the field.",
+        EntryKind::Procedure(Procedure {
             when: "Water source is untreated or of unknown safety.".into(),
             steps: vec![
                 "Collect water from the cleanest available source.".into(),
@@ -44,9 +44,9 @@ fn main() {
             ],
             requires: vec!["Heat source".into(), "Container".into()],
         }),
-        source: "FM 21-76, Where There Is No Doctor".into(),
-        tags: vec!["water".into(), "survival".into(), "purification".into()],
-    });
+        "FM 21-76, Where There Is No Doctor",
+        vec!["water".into(), "survival".into(), "purification".into()],
+    ));
 
     // Search
     println!("=== Search: 'light' ===");

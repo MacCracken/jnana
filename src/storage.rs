@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// Storage budget analysis.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct StorageBudget {
     /// Available space in megabytes.
     pub available_mb: u64,
@@ -69,6 +70,10 @@ mod tests {
     use crate::domain::Domain;
     use crate::source::SourceKind;
 
+    fn make_source(id: &str, name: &str, domain: Domain, size_mb: u64) -> Source {
+        Source::new(id, name, domain, SourceKind::Zim, "", size_mb)
+    }
+
     #[test]
     fn budget_empty() {
         let profile = Profile::survival();
@@ -81,17 +86,12 @@ mod tests {
     #[test]
     fn budget_fits_small_sources() {
         let profile = Profile::survival();
-        let sources = vec![Source {
-            id: "med".into(),
-            name: "Medical Encyclopedia".into(),
-            domain: Domain::Medicine,
-            kind: SourceKind::Zim,
-            url: "".into(),
-            size_mb: 1500,
-            checksum: None,
-            enabled: true,
-            notes: "".into(),
-        }];
+        let sources = vec![make_source(
+            "med",
+            "Medical Encyclopedia",
+            Domain::Medicine,
+            1500,
+        )];
         let budget = calculate(5000, &profile, &sources);
         assert_eq!(budget.fits.len(), 1);
         assert!(budget.excluded.is_empty());
@@ -100,19 +100,72 @@ mod tests {
     #[test]
     fn budget_excludes_too_large() {
         let profile = Profile::survival();
-        let sources = vec![Source {
-            id: "wiki".into(),
-            name: "Full Wikipedia".into(),
-            domain: Domain::Medicine,
-            kind: SourceKind::Zim,
-            url: "".into(),
-            size_mb: 50_000,
-            checksum: None,
-            enabled: true,
-            notes: "".into(),
-        }];
+        let sources = vec![make_source(
+            "wiki",
+            "Full Wikipedia",
+            Domain::Medicine,
+            50_000,
+        )];
         let budget = calculate(5000, &profile, &sources);
         assert!(budget.fits.is_empty());
         assert_eq!(budget.excluded.len(), 1);
+    }
+
+    #[test]
+    fn budget_zero_available() {
+        let profile = Profile::survival();
+        let sources = vec![make_source("med", "Medical", Domain::Medicine, 100)];
+        let budget = calculate(0, &profile, &sources);
+        assert!(budget.fits.is_empty());
+        assert_eq!(budget.remaining_mb, 0);
+    }
+
+    #[test]
+    fn budget_disabled_sources_excluded() {
+        let profile = Profile::survival();
+        let sources = vec![
+            Source::new("med", "Medical", Domain::Medicine, SourceKind::Zim, "", 100)
+                .with_enabled(false),
+        ];
+        let budget = calculate(5000, &profile, &sources);
+        assert!(budget.fits.is_empty());
+        assert!(budget.excluded.is_empty()); // disabled sources don't appear at all
+    }
+
+    #[test]
+    fn budget_wrong_domain_excluded() {
+        let profile = Profile::developer(); // Computing, Mathematics, Statistics, Physics
+        let sources = vec![make_source("med", "Medical", Domain::Medicine, 100)];
+        let budget = calculate(5000, &profile, &sources);
+        assert!(budget.fits.is_empty());
+    }
+
+    #[test]
+    fn budget_multiple_sources_smallest_first() {
+        let profile = Profile::survival();
+        let sources = vec![
+            make_source("large", "Large", Domain::Medicine, 1500),
+            make_source("small", "Small", Domain::Medicine, 200),
+            make_source("medium", "Medium", Domain::Survival, 800),
+        ];
+        // 5000 - 100 (internal) = 4900 remaining
+        // small (200) + medium (800) + large (1500) = 2500, all fit
+        let budget = calculate(5000, &profile, &sources);
+        assert_eq!(budget.fits.len(), 3);
+        assert!(budget.excluded.is_empty());
+    }
+
+    #[test]
+    fn budget_partial_fit() {
+        let profile = Profile::survival();
+        let sources = vec![
+            make_source("small", "Small", Domain::Medicine, 200),
+            make_source("huge", "Huge", Domain::Medicine, 5000),
+        ];
+        // 500 - 100 = 400 remaining; small fits, huge doesn't
+        let budget = calculate(500, &profile, &sources);
+        assert_eq!(budget.fits.len(), 1);
+        assert_eq!(budget.excluded.len(), 1);
+        assert_eq!(budget.fits[0], "Small");
     }
 }

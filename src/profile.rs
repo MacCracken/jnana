@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// A storage profile — a curated selection of knowledge for a use case.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Profile {
     /// Profile identifier (e.g. "survival", "developer").
     pub id: String,

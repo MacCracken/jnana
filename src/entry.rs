@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// A single knowledge entry.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Entry {
     /// Unique identifier (e.g. "speed_of_light", "cpr_procedure").
     pub id: String,
@@ -92,15 +93,38 @@ pub struct Table {
 }
 
 impl Entry {
+    /// Create a new knowledge entry.
+    #[must_use]
+    pub fn new(
+        id: impl Into<String>,
+        title: impl Into<String>,
+        domain: Domain,
+        summary: impl Into<String>,
+        kind: EntryKind,
+        source: impl Into<String>,
+        tags: Vec<String>,
+    ) -> Self {
+        Self {
+            id: id.into(),
+            title: title.into(),
+            domain,
+            summary: summary.into(),
+            kind,
+            source: source.into(),
+            tags,
+        }
+    }
+
     /// Check if a tag matches (case-insensitive).
     #[must_use]
+    #[inline]
     pub fn has_tag(&self, tag: &str) -> bool {
-        let lower = tag.to_lowercase();
-        self.tags.iter().any(|t| t.to_lowercase() == lower)
+        self.tags.iter().any(|t| t.eq_ignore_ascii_case(tag))
     }
 
     /// Estimated size in bytes for storage budgeting.
     #[must_use]
+    #[inline]
     pub fn estimated_size(&self) -> usize {
         self.summary.len()
             + self.source.len()
@@ -218,5 +242,61 @@ mod tests {
         let json = serde_json::to_string(&e).unwrap();
         let decoded: Entry = serde_json::from_str(&json).unwrap();
         assert_eq!(decoded.id, "cpr_adult");
+    }
+
+    #[test]
+    fn has_tag_case_insensitive() {
+        let e = sample_constant();
+        assert!(e.has_tag("Light"));
+        assert!(e.has_tag("EXACT"));
+        assert!(e.has_tag("fundamental"));
+    }
+
+    #[test]
+    fn has_tag_no_match() {
+        let e = sample_constant();
+        assert!(!e.has_tag("quantum"));
+        assert!(!e.has_tag(""));
+    }
+
+    #[test]
+    fn estimated_size_table() {
+        let e = Entry::new(
+            "elements",
+            "Periodic Table",
+            Domain::Chemistry,
+            "The periodic table.",
+            EntryKind::Table(Table {
+                columns: vec!["Symbol".into(), "Name".into()],
+                rows: vec![
+                    vec!["H".into(), "Hydrogen".into()],
+                    vec!["He".into(), "Helium".into()],
+                ],
+                description: "First two elements.".into(),
+            }),
+            "kimiya",
+            vec![],
+        );
+        assert!(e.estimated_size() > 0);
+    }
+
+    #[test]
+    fn entry_new_constructor() {
+        let e = Entry::new(
+            "test",
+            "Test Entry",
+            Domain::Mathematics,
+            "A test.",
+            EntryKind::Fact(Fact {
+                statement: "1+1=2".into(),
+                explanation: "Arithmetic.".into(),
+                verification: Some("test_addition".into()),
+            }),
+            "hisab",
+            vec!["math".into()],
+        );
+        assert_eq!(e.id, "test");
+        assert_eq!(e.domain, Domain::Mathematics);
+        assert!(e.has_tag("math"));
     }
 }

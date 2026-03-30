@@ -81,4 +81,42 @@ mod tests {
         assert_send::<JnanaError>();
         assert_sync::<JnanaError>();
     }
+
+    #[test]
+    fn error_domain_not_found() {
+        let err = JnanaError::DomainNotFound("quantum".into());
+        assert!(err.to_string().contains("quantum"));
+    }
+
+    #[test]
+    fn error_profile_not_found() {
+        let err = JnanaError::ProfileNotFound("turbo".into());
+        assert!(err.to_string().contains("turbo"));
+    }
+
+    #[test]
+    fn error_source() {
+        let err = JnanaError::Source("download failed".into());
+        assert!(err.to_string().contains("download failed"));
+    }
+
+    #[test]
+    fn error_parse() {
+        let err = JnanaError::Parse("invalid TOML".into());
+        assert!(err.to_string().contains("invalid TOML"));
+    }
+
+    #[test]
+    fn error_from_io() {
+        let io_err = std::io::Error::new(std::io::ErrorKind::NotFound, "missing");
+        let err: JnanaError = io_err.into();
+        assert!(err.to_string().contains("missing"));
+    }
+
+    #[test]
+    fn error_from_json() {
+        let json_err = serde_json::from_str::<String>("not json").unwrap_err();
+        let err: JnanaError = json_err.into();
+        assert!(err.to_string().contains("JSON"));
+    }
 }
