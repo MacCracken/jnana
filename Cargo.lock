@@ -426,9 +426,9 @@ dependencies = [
 
 [[package]]
 name = "kimiya"
-version = "1.1.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dc72c749dfa2ddee3b0528da8813d350a13f33c31d82caa7649f52d12cb147d"
+checksum = "d0aae9a771c26c8356204384885cacf79625a21459f3670294db0b90f985c371"
 dependencies = [
  "hisab",
  "serde",
