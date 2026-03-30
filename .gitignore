@@ -23,6 +23,7 @@ coverage/
 
 # Benchmark output
 criterion/
+benchmark-results/
 
 # Environment / secrets
 .env
